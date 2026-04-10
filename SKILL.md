@@ -63,6 +63,7 @@ Hard rules:
 - if support is missing after thorough search, use a placeholder such as `[TO VERIFY CITATION]` only as a last resort.
 - if a sentence makes a strong claim but no source is available, rewrite it conservatively or flag it for verification
 - if a sentence draws a conclusion, the conclusion must be backed by one of the following: literature support, experiment support, or explicit theoretical analysis; literature-review summaries may rely on the cited literature itself, but should still avoid unsupported over-generalization
+- this verification scope covers ALL thesis sections, not only literature-review chapters; problem-analysis sections, research-background sections, and method-motivation sections commonly contain factual claims (e.g., properties of a model, capabilities of a technique, or observed phenomena) that also require citation support or conservative softening
 
 ## Writing Convention Rule
 
@@ -380,11 +381,14 @@ Check rules that are part of thesis 写作规范, not mere style:
 #### Pass 4: Citation and Fact Verification (引用与事实核查)
 
 Apply rules from `references/citation-verification.md`:
+- **scan every sentence and classify it as factual, conclusion-like, interpretive, or connective; every factual or conclusion-like sentence must be explicitly checked for citation support — this applies to ALL sections of the thesis, not only literature-review chapters**
 - every factual claim has a citation or is softened
 - no invented author names, years, or DOIs
 - every conclusion-like sentence has an identifiable basis (literature, experiment, or theoretical analysis)
 - strong comparative/evaluative claims ("widely recognized", "state of the art") have evidence or are weakened
+- if a factual or conclusion-like sentence lacks a citation and the claim is non-trivial, use runSubagent to search for supporting literature before deciding whether to add a citation or soften the claim
 - if incomplete citations are found, use runSubagent to search and fill them before flagging
+- **mandatory re-verification after any citation is added or corrected:** immediately re-check that the author names, year, DOI string, and publication venue retrieved by runSubagent are internally consistent and the DOI resolves to the correct paper; do not treat a retrieved citation as verified unless this check passes explicitly
 
 #### Pass 5: Logic Check (逻辑检查)
 
@@ -418,7 +422,8 @@ Simulate a thesis defense reviewer. Apply rules from Review-Pass Mode (Mode 5):
 ### Re-Review Phase
 
 - re-read the fixed text
-- run a compressed re-check (all 6 passes in one scan)
+- **if any citations were added or modified during the Fix Phase, re-run Pass 4 in full (not compressed) before the general re-check:** confirm that each new or changed citation has correct author names, year, DOI, and that the DOI matches the paper being cited; any citation that fails this check must be flagged as a major issue
+- run a compressed re-check (all 6 passes in one scan) on all other changes
 - if new major issues are found, fix and re-check again
 - if only minor or cosmetic issues remain, report them to the user and declare the loop passed
 
