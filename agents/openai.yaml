@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thesis Content Writing"
+  short_description: "Draft, refine, humanize, and review thesis sections."
+  default_prompt: "Use $thesis-content-writing to draft or refine a Chinese thesis section into txt-ready content with optional figure notes and bare LaTeX formulas."
