@@ -1,13 +1,88 @@
 ---
 name: thesis-content-writing
-description: Write and refine Chinese thesis content for users who already have a Word or .docx template and mainly need section text, figure insertion notes, captions, title suggestions, reviewer-style checks, and formulas in bare LaTeX. Use when the user asks to draft or polish a thesis chapter or section, save content into .txt files for manual copy into Word, remove AI-sounding phrasing, do a logic check, prepare figure briefs, or review a chapter from an advisor or reviewer perspective.
+description: >
+  Full-cycle research paper writing skill. Covers research idea incubation (literature landscape,
+  GAP analysis, idea evaluation), research PRD planning, paper storyline design, experiment planning,
+  section-by-section writing for both Chinese thesis and English conference/journal papers,
+  claim-evidence alignment, and adversarial self-review.
+  Use when the user asks about: research ideas, literature survey, gap analysis, paper planning,
+  thesis/paper writing, drafting, polishing, de-AI, logic checks, figure briefs, experiment design,
+  claim-evidence checks, self-review, or any academic writing task.
 ---
 
-# Thesis Content Writing
+# Research Paper Writing Skill
+
+## Routing
+
+This is the unified entry point for a complete research writing workflow.
+Identify the user's intent and route to the right section or reference accordingly.
+
+### Language Mode Selection (Mandatory for Writing & Review)
+
+When the user's request involves writing or review, you **must** ask before proceeding:
+
+> "你当前的写作目标是？
+> 1. **中文学位论文**（毕业论文 / 学位论文）
+> 2. **英文投稿论文**（会议 / 期刊投稿）
+>
+> 请告诉我你的选择。"
+
+Rules:
+- Never guess the language mode from the user's input language.
+- Once selected, persist for the session unless the user explicitly switches.
+- Choice 1 → Use the **Chinese Thesis Writing** rules below (the core of this skill).
+- Choice 2 → Use the **English Paper Writing** references in `references/paper-writing/`.
+
+### Intent Routing Table
+
+| User Intent | Route To |
+|------------|----------|
+| idea, 研究方向, 选题, brainstorm, 文献调研, gap, literature survey | `references/idea-incubation/` — see [Idea Incubation](#idea-incubation) |
+| 研究规划, 研究PRD, 技术路线, research plan, 可行性 | `references/research-prd/` — see [Research PRD](#research-prd) |
+| storyline, paper story, 逻辑骨架, 大纲, outline | `references/paper-storyline/` — see [Paper Storyline](#paper-storyline) |
+| 实验设计, 实验规划, ablation, experiment plan | `references/experiment-planning/` — see [Experiment Planning](#experiment-planning) |
+| 写论文, draft, rewrite, 润色, abstract, introduction, method | **Ask Language Mode** → Chinese: use modes below / English: `references/paper-writing/` |
+| claim, evidence, 对齐, alignment | `references/claim-evidence/` — see [Claim-Evidence Alignment](#claim-evidence-alignment) |
+| 审稿, review, 自查, 审核精修, defense, 去AI味 | **Ask Language Mode** → Chinese: Review-Pass mode below / English: `references/review/` |
+
+### Global Drawing Convention
+
+| Scenario | Tool | Format |
+|----------|------|--------|
+| Flowcharts, architecture diagrams, logic maps | **Mermaid** | Embedded in Markdown |
+| Precise technical figures, pipeline diagrams | **DrawIO** | `.drawio` file |
+| Vector graphics requiring fine control | **SVG** | `.svg` file |
+| ❌ Forbidden | ASCII art / character drawings | Never use |
+
+### Human-in-the-Loop Checkpoints
+
+Pause and request user confirmation at these decision points:
+- Idea incubation: GAP analysis results, Idea evaluation matrix, Idea Card finalization
+- Research PRD: v1 concept doc confirmed before entering v2
+- Paper storyline: Outline finalization
+- Writing: Language mode selection
+- Claim-evidence: Handling strategy for unsupported claims
+- Review: Major issue fix proposals
+
+### Output Convention
+
+- Default output is paste-ready finished content, not verbose explanations.
+- For edits, return full revised text unless the user asks for diff-style output.
+- Never fabricate citations, experiment data, or author/DOI information.
+- When information is insufficient, mark `[待补充]` instead of guessing.
+
+### Sub-Skill Loading Rule
+
+- Load only the references needed for the current task.
+- Load examples on demand, not preloaded.
+
+---
+
+# Chinese Thesis Content Writing
 
 ## Overview
 
-Use this skill for a content-first thesis workflow:
+Use this section for a content-first Chinese thesis workflow:
 - draft Chinese thesis sections for manual paste into Word
 - refine existing text without over-editing
 - humanize AI-sounding or translation-like prose
@@ -512,3 +587,162 @@ Read [references/chinese-thesis-style.md](references/chinese-thesis-style.md) fo
 Read [references/refinement-modes.md](references/refinement-modes.md) when the user explicitly asks for humanization, conservative polishing, logic checking, figure titles, or a reviewer-style pass.
 
 Read [references/citation-verification.md](references/citation-verification.md) when the user wants literature-backed writing, inline citations, or sentence-level fact checking.
+
+---
+
+# English Paper Writing (ML/CV/NLP)
+
+When the user selects **English paper mode**, load the references below.
+These are adapted from the [Pengsida methodology](https://pengsida.notion.site/c1a22465a0fa4b15a12985223916048e).
+
+## Section Writing Guides
+
+Read these references for section-specific guidance:
+
+- [references/paper-writing/abstract.md](references/paper-writing/abstract.md) — Abstract: 3 templates (Challenge→Contribution/Insight)
+- [references/paper-writing/introduction.md](references/paper-writing/introduction.md) — Introduction: backward reasoning + 4+3+4 template system
+- [references/paper-writing/related-work.md](references/paper-writing/related-work.md) — Related Work: organization strategies
+- [references/paper-writing/method.md](references/paper-writing/method.md) — Method: three-element module structure (Motivation→Design→Advantage)
+- [references/paper-writing/experiments.md](references/paper-writing/experiments.md) — Experiments: 3 core questions + table rules
+- [references/paper-writing/conclusion.md](references/paper-writing/conclusion.md) — Conclusion
+- [references/paper-writing/does-my-writing-flow-source.md](references/paper-writing/does-my-writing-flow-source.md) — Paragraph clarity checker
+- [references/paper-writing/paper-review.md](references/paper-writing/paper-review.md) — Self-review checklist
+
+## Examples Library
+
+Read [references/paper-writing/examples/index.md](references/paper-writing/examples/index.md) for the full example catalog.
+Load specific examples on demand:
+
+- `references/paper-writing/examples/abstract/` — 3 abstract template examples
+- `references/paper-writing/examples/introduction/` — 13 introduction examples (task intro + challenge + pipeline)
+- `references/paper-writing/examples/method/` — 9 method examples (three-element structure, module design)
+
+## Core English Writing Principles
+
+- One paragraph, one message.
+- Reverse-outline verification: after writing, extract each paragraph's topic sentence; the sequence should form a coherent argument.
+- Module description follows the triad: **Motivation → Design → Technical Advantage**.
+- Tables use booktabs style (no vertical lines, minimal horizontal lines).
+- Every major claim must be supported by experimental evidence (see claim-evidence alignment).
+
+---
+
+# Idea Incubation
+
+When the user asks about research ideas, topic selection, literature survey, or gap analysis,
+load and follow the references in `references/idea-incubation/`:
+
+- [references/idea-incubation/literature-landscape.md](references/idea-incubation/literature-landscape.md) — Literature landscape search strategy and output template
+- [references/idea-incubation/gap-analysis.md](references/idea-incubation/gap-analysis.md) — GAP identification methods and scoring rubric
+- [references/idea-incubation/idea-evaluation.md](references/idea-incubation/idea-evaluation.md) — Three-dimension evaluation framework (academic value / feasibility / resource fit)
+- [references/idea-incubation/idea-card-template.md](references/idea-incubation/idea-card-template.md) — Final Idea Card output template
+
+### Idea Incubation Workflow
+
+1. **Anchor direction**: Ask the user to describe their research interest
+2. **Literature landscape**: Search and classify core papers by technical route
+3. **Contribution enumeration**: Extract what/why-works/limitation per paper
+4. **GAP analysis**: Identify unresolved challenges across routes
+5. **Idea seed generation**: Propose 2-3 candidate ideas from GAPs
+6. **Idea evaluation**: Score with three-dimension matrix
+7. **Human-in-the-loop**: User reviews → feedback → iterate until confirmed
+8. **Idea Card finalization**: Output structured Idea Card
+
+---
+
+# Research PRD
+
+When the user asks about research planning, technical roadmap, or feasibility,
+load and follow the references in `references/research-prd/`:
+
+- [references/research-prd/concept-doc-template.md](references/research-prd/concept-doc-template.md) — v1 research concept document template
+- [references/research-prd/landing-doc-template.md](references/research-prd/landing-doc-template.md) — v2 research landing document template
+- [references/research-prd/three-perspective.md](references/research-prd/three-perspective.md) — Three-dimension diagnostic detailed guide
+
+### Research PRD Workflow
+
+1. **Three-dimension diagnostic**: Academic value → Technical feasibility → Resource constraints
+2. **v1 concept document**: Direction alignment (user must confirm before v2)
+3. **v2 landing document**: Executable technical plan + experiment design + timeline
+
+---
+
+# Paper Storyline
+
+When the user asks about paper story, outline, or logic skeleton,
+load and follow the references in `references/paper-storyline/`:
+
+- [references/paper-storyline/backward-forward-reasoning.md](references/paper-storyline/backward-forward-reasoning.md) — Backward reasoning + forward narrative guide
+- [references/paper-storyline/introduction-logic-map.md](references/paper-storyline/introduction-logic-map.md) — Introduction template catalog (Part A/B/C with multiple versions)
+- [references/paper-storyline/storyline-templates.md](references/paper-storyline/storyline-templates.md) — 5 common paper type storyline skeletons
+
+### Paper Storyline Workflow
+
+1. **Backward reasoning**: Answer 4 key questions about contributions
+2. **Forward narrative**: Build the story arc (Task→Challenge→Solution→Advantage)
+3. **Introduction logic map**: Select template combination (A-VX + B-VX + C-VX)
+4. **Full-paper outline**: Each section's core message + paragraph roles
+5. **Claim-evidence pre-mapping**: Map each claim to its evidence source
+
+---
+
+# Experiment Planning
+
+When the user asks about experiment design, ablation planning, or experiment logs,
+load and follow the references in `references/experiment-planning/`:
+
+- [references/experiment-planning/experiment-design-matrix.md](references/experiment-planning/experiment-design-matrix.md) — Claim-Experiment mapping matrix template
+- [references/experiment-planning/ablation-checklist.md](references/experiment-planning/ablation-checklist.md) — Ablation derivation rules and template
+- [references/experiment-planning/experiment-log-template.md](references/experiment-planning/experiment-log-template.md) — Structured experiment recording template
+
+### Experiment Planning Workflow
+
+1. **Extract claims** from storyline/outline
+2. **Design experiments**: Map each claim to a validation experiment
+3. **Generate ablation checklist** from pipeline modules
+4. **Prepare experiment log** templates for structured recording
+5. **Track and update** as a living document throughout research
+
+---
+
+# Claim-Evidence Alignment
+
+When the user asks about claim-evidence checks or alignment,
+load and follow the references in `references/claim-evidence/`:
+
+- [references/claim-evidence/claim-extraction.md](references/claim-evidence/claim-extraction.md) — Rules for identifying claims in paper text
+- [references/claim-evidence/evidence-mapping.md](references/claim-evidence/evidence-mapping.md) — Criteria for evidence sufficiency and consistency
+- [references/claim-evidence/alignment-report-template.md](references/claim-evidence/alignment-report-template.md) — Output report template
+
+### Three Modes
+
+- **Build**: Extract all claims from Abstract + Introduction, build mapping table
+- **Verify**: Check each claim for sufficient evidence from experiments
+- **Fix**: Soften unsupported claims or flag experiments to add
+
+---
+
+# English Paper Review (5-Dimension)
+
+When the user selects English mode for review, load `references/review/`:
+
+- [references/review/five-dimension-review.md](references/review/five-dimension-review.md) — 5-dimension adversarial review checklist
+- [references/review/six-pass-review-loop.md](references/review/six-pass-review-loop.md) — 6-pass review-refine loop (also used for Chinese thesis)
+- [references/review/review-output-template.md](references/review/review-output-template.md) — Review output format templates
+
+### English 5-Dimension Review
+
+1. **Contribution**: New knowledge? Non-obvious novelty?
+2. **Writing Clarity**: Reproducible? Consistent terms? One paragraph, one message?
+3. **Experimental Strength**: Meaningful improvements over strong baselines?
+4. **Evaluation Completeness**: All key ablations? Strong baselines included?
+5. **Method Design Soundness**: Realistic setting? Robust without per-case tuning?
+
+---
+
+# Shared Utilities
+
+These cross-cutting references can be loaded by any module when needed:
+
+- [references/cross-section-consistency.md](references/cross-section-consistency.md) — Cross-section terminology, notation, abbreviation, and cross-reference consistency checks
+- [references/latex-engineering.md](references/latex-engineering.md) — LaTeX table/figure/formula formatting conventions and recommended packages
