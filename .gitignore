@@ -1,0 +1,24 @@
+# === Dev & staging artifacts ===
+.tmp/
+.docs/
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Editor / IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === Python (if any helper scripts exist) ===
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# === Node (if any tooling exists) ===
+node_modules/

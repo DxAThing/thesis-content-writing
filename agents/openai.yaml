@@ -1,4 +1,4 @@
 interface:
-  display_name: "Thesis Content Writing"
-  short_description: "Draft, refine, humanize, and review thesis sections."
-  default_prompt: "Use $thesis-content-writing to draft or refine a Chinese thesis section into txt-ready content with optional figure notes and bare LaTeX formulas."
+  display_name: "Research Paper Writing"
+  short_description: "Full-cycle research paper writing: idea incubation, PRD planning, storyline, writing (Chinese thesis & English paper), claim-evidence alignment, and self-review."
+  default_prompt: "Use $thesis-content-writing to help with my research paper — idea incubation, planning, drafting, refining, reviewing, or any other academic writing task."
