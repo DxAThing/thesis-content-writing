@@ -470,6 +470,15 @@ load and follow the references in `references/paper-storyline/`:
 - [references/paper-storyline/introduction-logic-map.md](references/paper-storyline/introduction-logic-map.md) — Introduction template catalog (Part A/B/C with multiple versions)
 - [references/paper-storyline/storyline-templates.md](references/paper-storyline/storyline-templates.md) — 5 common paper type storyline skeletons
 
+### Chinese Thesis Chapter Arrangement (Pre-Step)
+
+When the user is writing a **Chinese degree thesis** and asks about chapter arrangement, outline, or overall structure, apply the following rules **before** generating any outline:
+
+1. **Ask whether the user has reference theses**: Instruct the user to obtain completed theses from their advisor or senior labmates in the same research group. These provide the most reliable signal for what chapter structure, depth, and length are expected by the specific institution and advisor.
+2. **Reference thesis is mandatory input**: Do not generate a final chapter arrangement without the user confirming they have consulted (or chosen not to consult) at least one reference thesis. If they have one, ask them to describe the structure so the AI-generated outline can align.
+3. **AI assistance is secondary**: The AI can propose a chapter skeleton based on the research topic and common conventions, but the reference thesis from the same group takes precedence when there is a conflict.
+4. **Human-in-the-loop checkpoint**: After proposing a chapter arrangement, pause and ask the user to verify it against their reference thesis before proceeding to section-level writing.
+
 ### Paper Storyline Workflow
 
 1. **Backward reasoning**: Answer 4 key questions about contributions

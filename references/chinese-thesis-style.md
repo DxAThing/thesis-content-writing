@@ -1,5 +1,14 @@
 # Chinese Thesis Style
 
+## Chapter Arrangement Convention
+
+Before designing the chapter structure of a Chinese degree thesis, follow this priority order:
+
+1. **Obtain reference theses from the same group**: Ask the advisor or senior labmates for their completed degree theses. The chapter arrangement in those theses reflects the norms expected by the specific institution and advisor, and outweighs any generic AI suggestion.
+2. **Use reference structure as baseline**: If a reference thesis is available, map its chapter titles and section divisions before proposing a new outline. Diverge only when the research topic genuinely requires a different structure, and explain why.
+3. **AI proposes, human confirms**: After generating a chapter skeleton, always pause for the user to verify it against the reference thesis. Do not proceed to section drafting until the chapter arrangement is confirmed.
+4. **When no reference is available**: Fall back to the standard structure for the discipline (e.g., Introduction → Related Work → Method → Experiments → Conclusion for CS theses), and note that the user should still verify this against their institution's template.
+
 ## Goal
 
 Write Chinese thesis prose that sounds like a careful human author, not a translated or AI-padded draft.
