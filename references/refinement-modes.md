@@ -209,7 +209,63 @@ Examples:
 - `System architecture of the proposed method`
 - `Ablation results on the feature selection module`
 
-## 7. Practical Invocation Patterns
+## 7. English De-AI Patterns
+
+When applying Humanize / De-AI mode to English text, watch for these specific patterns.
+
+### AI-Overused Words
+
+Replace or reduce usage of these words unless a specific technical meaning demands them:
+
+| Overused | Better Alternative |
+|----------|-------------------|
+| Accentuate | Emphasize, highlight |
+| Ameliorate | Improve |
+| Bolster | Support, strengthen |
+| Culminate | Result in, lead to |
+| Delineate | Describe, outline |
+| Delve / Delve into | Examine, explore, investigate |
+| Elucidate | Explain, clarify |
+| Endeavor | Attempt, effort |
+| Foster | Encourage, promote |
+| Harness | Use, apply |
+| Intricate | Complex |
+| Leverage | Use, apply, exploit |
+| Manifest | Show, appear |
+| Nuanced | Subtle, fine-grained |
+| Pivotal | Key, important, critical |
+| Profound | Significant, deep |
+| Scrutinize | Examine, inspect |
+| Substantiate | Support, confirm |
+| Transcend | Go beyond, exceed |
+| Underscore | Highlight, emphasize |
+| Unveil | Introduce, present, reveal |
+| Vibrant | Active, dynamic |
+| Perpetuate | Continue, maintain |
+| Reimagine | Rethink, redesign |
+| Reconcile | Resolve, align |
+| Tapestry | Context, landscape, ecosystem |
+
+### English Mechanical Patterns to Remove
+
+- **Filler openers**: "First and foremost", "It is worth noting that", "It should be noted that", "In light of the above" → Remove or start directly.
+- **Padding phrases**: "In order to" → "To"; "A comprehensive analysis of" → "An analysis of".
+- **Overclaiming**: "groundbreaking", "revolutionary", "state-of-the-art" without supporting evidence → Remove or provide evidence.
+- **Significance stacking**: "plays a crucial/pivotal/vital role" → Be specific about what it actually does.
+- **Mechanical three-part lists**: "First... Second... Third..." in every paragraph → Vary structure.
+- **Generic concluding sentences**: "In summary, our method achieves superior performance" → Remove if it repeats what was already stated.
+- **Dash overuse**: Excessive em dashes (—) → Use commas, parentheses, or subordinate clauses.
+
+### English De-AI Examples
+
+- bad: `Our method leverages the intricate interplay between spatial and frequency domain features to unveil subtle artifacts.`
+- better: `Our method combines spatial and frequency domain features to detect subtle artifacts.`
+- bad: `It is worth noting that this approach fundamentally transcends the limitations of prior work.`
+- better: `This approach addresses two specific limitations of prior work: [specific limitation 1] and [specific limitation 2].`
+- bad: `The pivotal role of our attention mechanism cannot be understated, as it fosters a more nuanced understanding of the input.`
+- better: `The attention mechanism helps the model focus on discriminative regions in the input.`
+
+## 8. Practical Invocation Patterns
 
 Examples of requests that should trigger these modes:
 - "Polish this section but keep my wording as much as possible."
@@ -218,3 +274,5 @@ Examples of requests that should trigger these modes:
 - "Review this section like an advisor."
 - "Give me a figure brief and a caption for this subsection."
 - "Check every sentence and keep only claims with verified support."
+- "De-AI this English paragraph."
+- "Humanize my LaTeX text."

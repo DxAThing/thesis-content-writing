@@ -1,13 +1,13 @@
 # 6-Pass Review-Refine Loop (审核-精修循环)
 
-This file contains the detailed rules for the Chinese thesis 6-pass review loop.
-It is extracted from the thesis-content-writing skill's review-refinement loop section.
+This file contains the detailed rules for the 6-pass review loop.
+It applies to both **Chinese thesis** and **English paper** writing, with language-specific notes where needed.
 
 ## When to Use
 
 Activate when:
 - The user explicitly requests a review-refine cycle
-- The user says "审核直到通过", "审核-精修", or similar
+- The user says "审核直到通过", "审核-精修", "review-refine loop", or similar
 
 ## Pass Definitions
 
@@ -23,6 +23,8 @@ Simulate a first-time reader of the chapter. Check:
 ### Pass 2: De-AI / Humanize Check (去 AI 味)
 
 Scan for patterns listed in `thesis-content-writing/references/refinement-modes.md`. Focus on:
+
+**Chinese-specific patterns:**
 - Mechanical parallel structures ("首先……其次……再次……", "不是……而是……" repeated)
 - Decorative contrast frames that repackage direct statements
 - Over-connected causal chains ("通过……从而……进而……")
@@ -33,13 +35,36 @@ Scan for patterns listed in `thesis-content-writing/references/refinement-modes.
 - Section-introduction filler that merely restates the heading
 - Pseudo-taxonomies where items are actually cause-effect
 
+**English-specific patterns:**
+- AI-overused words (leverage, delve, unveil, pivotal, etc.)
+- Filler openers ("It is worth noting that", "First and foremost")
+- Mechanical three-part lists in every paragraph
+- Overclaiming without evidence ("groundbreaking", "revolutionary")
+- Excessive em dash usage
+- Generic concluding sentences that repeat what was already stated
+
+See `references/refinement-modes.md` § 7 for the full English de-AI word list.
+
 ### Pass 3: Writing Convention Check (学术规范)
 
-Check rules that are part of thesis 写作规范:
-- First mention of an English term must give full English name + Chinese translation, then shorten consistently
+Check rules that are part of academic writing conventions:
+
+**Shared (both languages):**
+- First mention of an abbreviation must give full name, then shorten consistently
 - First mention of a published work should prefer its established method name or paper title
 - Abbreviation and term consistency across nearby sections
-- Citation format consistency: （Author, Year, DOI: xxx）
+
+**Chinese-specific:**
+- First English term → full English name + Chinese translation, then abbreviation
+- Citation format: （Author, Year, DOI: xxx）
+- No spaces between CJK and Western characters
+- Full-width paired quotation marks
+
+**English-specific:**
+- No contractions
+- No possessive forms for methods/models
+- Citation format per venue style (\cite{} or Author et al.)
+- Present tense for methods/findings, past tense for specific events
 
 ### Pass 4: Citation and Fact Verification (引用与事实核查)
 

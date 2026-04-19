@@ -1,13 +1,16 @@
 ---
-name: thesis-content-writing
+name: research-and-writing
 description: >
-  Full-cycle research paper writing skill. Covers research idea incubation (literature landscape,
-  GAP analysis, idea evaluation), research PRD planning, paper storyline design, experiment planning,
-  section-by-section writing for both Chinese thesis and English conference/journal papers,
-  claim-evidence alignment, and adversarial self-review.
+  Full-cycle research and writing skill for both Chinese thesis and English conference/journal papers.
+  Covers: research idea incubation (literature landscape, GAP analysis, idea evaluation),
+  research PRD planning, paper storyline design, experiment planning, section-by-section writing,
+  translation, condensing/expanding, polishing, de-AI/humanization, architecture diagrams,
+  experiment visualization, figure/table captions, experiment analysis, claim-evidence alignment,
+  and adversarial self-review.
   Use when the user asks about: research ideas, literature survey, gap analysis, paper planning,
   thesis/paper writing, drafting, polishing, de-AI, logic checks, figure briefs, experiment design,
-  claim-evidence checks, self-review, or any academic writing task.
+  claim-evidence checks, self-review, translation, condensing, expanding, architecture diagrams,
+  experiment visualization, or any academic writing task.
 ---
 
 # Research Paper Writing Skill
@@ -30,8 +33,8 @@ When the user's request involves writing or review, you **must** ask before proc
 Rules:
 - Never guess the language mode from the user's input language.
 - Once selected, persist for the session unless the user explicitly switches.
-- Choice 1 → Use the **Chinese Thesis Writing** rules below (the core of this skill).
-- Choice 2 → Use the **English Paper Writing** references in `references/paper-writing/`.
+- Choice 1 → Apply **Chinese Thesis** conventions from `references/chinese-thesis-style.md`.
+- Choice 2 → Apply **English Paper** conventions from `references/english-paper-style.md`.
 
 ### Intent Routing Table
 
@@ -41,9 +44,18 @@ Rules:
 | 研究规划, 研究PRD, 技术路线, research plan, 可行性 | `references/research-prd/` — see [Research PRD](#research-prd) |
 | storyline, paper story, 逻辑骨架, 大纲, outline | `references/paper-storyline/` — see [Paper Storyline](#paper-storyline) |
 | 实验设计, 实验规划, ablation, experiment plan | `references/experiment-planning/` — see [Experiment Planning](#experiment-planning) |
-| 写论文, draft, rewrite, 润色, abstract, introduction, method | **Ask Language Mode** → Chinese: use modes below / English: `references/paper-writing/` |
+| 翻译, translate, 中转英, 英转中 | Writing Mode: Translation → `references/paper-writing/translation.md` |
+| 缩写, 扩写, condense, expand, shorten, lengthen | Writing Mode: Condensing/Expanding → `references/paper-writing/condensing-expanding.md` |
+| 写论文, draft, rewrite, abstract, introduction, method, experiments, related work, conclusion | **Ask Language Mode** → Section guides in `references/paper-writing/` |
+| 润色, polish, refine | **Ask Language Mode** → Writing Mode: Refine |
+| 去AI味, humanize, de-AI, renwei | Writing Mode: Humanize → `references/refinement-modes.md` |
+| 逻辑检查, logic check, consistency | Writing Mode: Logic Check |
+| 架构图, architecture diagram, framework figure | `references/paper-writing/architecture-diagrams.md` |
+| 实验绘图, visualization, chart recommendation | `references/paper-writing/experiment-visualization.md` |
+| 图标题, 表标题, caption, figure title, table title | `references/paper-writing/figure-table-captions.md` |
+| 实验分析, experiment analysis, data analysis | `references/paper-writing/experiment-analysis.md` |
 | claim, evidence, 对齐, alignment | `references/claim-evidence/` — see [Claim-Evidence Alignment](#claim-evidence-alignment) |
-| 审稿, review, 自查, 审核精修, defense, 去AI味 | **Ask Language Mode** → Chinese: Review-Pass mode below / English: `references/review/` |
+| 审稿, review, 自查, 审核精修, defense, reviewer simulation | **Ask Language Mode** → `references/review/` |
 
 ### Global Drawing Convention
 
@@ -64,466 +76,301 @@ Pause and request user confirmation at these decision points:
 - Claim-evidence: Handling strategy for unsupported claims
 - Review: Major issue fix proposals
 
-### Output Convention
+### Core Output Convention
 
 - Default output is paste-ready finished content, not verbose explanations.
 - For edits, return full revised text unless the user asks for diff-style output.
 - Never fabricate citations, experiment data, or author/DOI information.
-- When information is insufficient, mark `[待补充]` instead of guessing.
-
-### Sub-Skill Loading Rule
-
+- When information is insufficient, mark `[待补充]` / `[TO VERIFY]` instead of guessing.
 - Load only the references needed for the current task.
 - Load examples on demand, not preloaded.
 
 ---
 
-# Chinese Thesis Content Writing
+# Writing Modes
 
-## Overview
+Choose the smallest mode that fits the request. All modes apply to both Chinese and English unless noted.
 
-Use this section for a content-first Chinese thesis workflow:
-- draft Chinese thesis sections for manual paste into Word
-- refine existing text without over-editing
-- humanize AI-sounding or translation-like prose
-- run a high-threshold logic check
-- prepare figure briefs, captions, and callout sentences
-- output formulas as bare LaTeX without math delimiters
-
-This skill assumes the user already has a template. Do not default to editing the `.docx` file itself.
-
-## Core Rule
-
-Optimize for paste-ready content, not fancy formatting.
-
-Default outputs should be:
-- plain text that can be copied into Word or saved as `.txt`
-- concise figure guidance that helps the user insert or create a figure later
-- formulas written as raw LaTeX only
-
-Do not fabricate references, results, numbers, or citations.
-
-## Verification and Citation Rule
-
-Apply sentence-level checking before finalizing any thesis text.
-
-For each sentence:
-- identify whether it is factual, interpretive, methodological, or purely connective
-- re-check factual and literature-backed statements before keeping them
-- remove or soften claims that cannot be supported
-
-For claims that are supported by literature, use inline citation format with full-width Chinese parentheses in Chinese thesis prose:
-
-```text
-（Author, Year, DOI: xxx）
-```
-
-Examples:
-
-```text
-（Vaswani et al., 2017, DOI: 10.48550/arXiv.1706.03762）
-（He et al., 2016, DOI: 10.1109/CVPR.2016.90）
-```
-
-Hard rules:
-- repeatedly verify all facts to avoid AI hallucinations and fabrications.
-- do not invent author names, years, or DOI values
-- **WHEN CITATIONS ARE MISSING OR INCOMPLETE:** proactively use runSubagent with the 'Explore' agent to search for and retrieve complete literature references (author names, years, DOI, publication venue). Do NOT leave placeholders like `[TO ADD CITATION]`.
-- the agent MUST execute literature search automatically when it encounters:
-  - incomplete citations (e.g., missing DOI or publication year)
-  - sentences with strong factual claims but no source nearby
-  - any reference mentioned without full details
-- use search queries targeting publication databases (arXiv, Google Scholar, IEEE Xplore, conference proceedings) to retrieve verified DOIs and full citations
-- if a DOI is not verified after search, do not output a fake complete citation
-- if support is missing after thorough search, use a placeholder such as `[TO VERIFY CITATION]` only as a last resort.
-- if a sentence makes a strong claim but no source is available, rewrite it conservatively or flag it for verification
-- if a sentence draws a conclusion, the conclusion must be backed by one of the following: literature support, experiment support, or explicit theoretical analysis; literature-review summaries may rely on the cited literature itself, but should still avoid unsupported over-generalization
-- this verification scope covers ALL thesis sections, not only literature-review chapters; problem-analysis sections, research-background sections, and method-motivation sections commonly contain factual claims (e.g., properties of a model, capabilities of a technique, or observed phenomena) that also require citation support or conservative softening
-
-## Writing Convention Rule
-
-Separate "de-AI" issues from "writing convention" issues.
-
-Writing convention covers academic presentation rules such as:
-- when a paper has a clear work name, paper title, or established method name, prefer that name at first mention instead of writing only "Author et al."
-- when an English technical term first appears, give the full English name and a Chinese explanation or translation, then use the abbreviation or Chinese term consistently afterward
-- keep technical names, abbreviations, and citation references stable across nearby sections
-- do not insert spaces between Chinese characters and Western letters/numbers (including standalone abbreviations such as "ViT" or "LoRA"); write them adjacently, e.g., "ViT模型"、"LoRA微调"、"第3章"
-- in Chinese prose, always use paired full-width quotation marks（“”和‘’）; do not use half-width straight quotes (" " or ' ')
-
-Do not treat these as mere style preferences. They are part of thesis writing规范.
-
-Quick classification examples:
-- belongs to Humanize / De-AI:
-  - bad: `在本文的问题设定中，AI生成图像检测、AI生成图像溯源、闭集设定以及后文的方法建模并非彼此孤立的概念。`
-  - better: `本文讨论的 AI 生成图像检测、AI 生成图像溯源和闭集设定，本质上都围绕来源判别展开。`
-- belongs to Humanize / De-AI:
-  - bad: `视觉基础模型真正提出的问题不是“能不能用”，而是“如何改造后再用”。`
-  - better: `视觉基础模型路线的核心挑战在于：如何在保留迁移能力的前提下，使其适配来源判别任务。`
-- belongs to Humanize / De-AI:
-  - bad: `现有研究已经证明“可检测”与“可迁移”，却还没有充分解决“可稳定区分来源”这一更细粒度的问题。`
-  - better: `现有研究已经表明，相关方法可以完成真伪检测，也具备一定跨来源迁移能力，但在多来源设定下的细粒度来源判别稳定性仍未得到充分解决。`
-- belongs to Humanize / De-AI:
-  - bad: generic uses of `链路` or `实际落点`
-  - better: use a concrete object such as `传播过程`, `成像过程`, `研究重心`, or `真正解决的问题`
-- belongs to Humanize / De-AI:
-  - bad: `局部扰动增强的基本思想，是不直接破坏图像中的全部判别信息。`
-  - better: `局部扰动增强的基本思想是不直接破坏图像中的全部判别信息。`
-- belongs to Humanize / De-AI:
-  - bad: `原型学习的基本思想，是为每个类别学习一个具有代表性的中心表示。`
-  - better: `原型学习的基本思想是为每个类别学习一个具有代表性的中心表示。`
-- belongs to Humanize / De-AI:
-  - bad: `后续用原型学习稳住来源边界的设计就缺乏根据。`
-  - better: `后续围绕原型学习重组来源判别几何的设计就缺乏根据。`
-- belongs to Humanize / De-AI:
-  - bad: `空间域、频域以及局部纹理与全局语义的关系，正是把问题收束到“检测线索如何转化为溯源线索”的几个关键切面。`
-  - better: `空间域、频域以及局部纹理与全局语义的关系，共同说明了检测线索如何进一步转化为可用于溯源的判别线索。`
-- belongs to Humanize / De-AI:
-  - bad: `问题在于，来源识别需要的往往不是这种高层语义一致性。`
-  - better: `来源识别更关心生成过程中的来源差异，高层语义一致性本身不足以支撑这一任务。`
-- belongs to Humanize / De-AI:
-  - bad: `对强语义表征模型而言，语义线索往往更显著。`
-  - better: `对以视觉基础模型为代表、擅长提取高层语义的表征模型而言，语义线索往往更显著。`
-- belongs to Humanize / De-AI:
-  - bad: `增强所依据的区域划分并不依赖 ViT 的切块设置。`
-  - better: `该策略先在图像层面完成局部重排，再把增强后的完整图像送入视觉基础模型进行编码。`
-- belongs to Verification / Citation:
-  - bad: `原型学习在细粒度分类中的作用，主要体现在它能够降低局部噪声和偶然偏差对决策边界的干扰。`
-  - better: `近年的细粒度分类研究已经开始显式利用类中心约束来压缩类内方差，并拉开细微的类间差异（Yao et al., 2024, DOI: 10.48550/arXiv.2407.04243）。从这个角度看，原型学习有助于围绕类别中心组织空间结构。`
-- belongs to Logic / Review:
-  - bad: `不过，对本文的闭集溯源任务而言，频域线索仍然只是来源信息的一部分。`
-  - better: `本文后续方法并不单独围绕频域统计建模。这里讨论频域线索，主要是为了说明来源信息也可能体现在全局统计分布中。`
-- belongs to Writing Convention:
-  - bad: `Wang 等提出了……`
-  - better: `Wang 等在《CNN-generated images are surprisingly easy to spot... for now》中……`
-- belongs to Writing Convention:
-  - bad: `本文采用 CLIP 与 LoRA。`
-  - better: `本文采用 Contrastive Language-Image Pretraining（CLIP，对比语言-图像预训练）与 Low-Rank Adaptation（LoRA，低秩适配）。`
-
-## Mode Selection
-
-Choose the smallest mode that fits the request.
-
-### 1. Draft Mode
+## 1. Draft Mode
 
 Use when the user asks for a new chapter, section, subsection, abstract, conclusion, or method description.
 
-Default behavior:
-- write the prose in Chinese
-- make it formal, specific, and thesis-appropriate
-- prefer full paragraphs over outline fragments
-- keep each paragraph focused on one main point
-- add figure notes or formulas only if useful
+Rules:
+- Write in the selected language mode (Chinese or English)
+- Prefer full paragraphs over outline fragments
+- Keep each paragraph focused on one main point
+- Add figure notes or formulas only if useful
+- Chinese: formal, specific, thesis-appropriate; load `references/chinese-thesis-style.md`
+- English: clear, precise, conference/journal quality; load `references/english-paper-style.md`
 
-### 2. Refine Mode
+## 2. Refine Mode
 
 Use when the user already has a draft and wants it polished.
 
-Default behavior:
-- preserve meaning, structure, and author intent
-- edit only where clarity, grammar, logic, or academic tone truly improves
-- if the text is already solid, keep it close to the original
+Rules:
+- Preserve meaning, structure, and author intent
+- Edit only where clarity, grammar, logic, or academic tone truly improves
+- If the text is already solid, keep it close to the original
+- Do not rewrite aggressively just to create visible change
+- If the draft contains clear redundancy, repeated claims, pseudo-classification, or filler, structural reduction is preferred over cosmetic polishing
 
-Do not rewrite aggressively just to create visible change.
-However, if the draft contains clear redundancy, repeated claims across sections, pseudo-classification, or section-introduction filler, structural reduction is allowed and preferred over cosmetic polishing.
+Load `references/refinement-modes.md` § Conservative Polish for detailed rules.
 
-### 3. Humanize Mode
+## 3. Humanize / De-AI Mode
 
-Use when the user asks for "renwei", "humanize", "de-AI", "qu AI wei", "runse", or wants the prose to feel less machine-written.
+Use when the user asks for "humanize", "de-AI", "去AI味", "renwei", or wants less machine-like prose.
 
-Default behavior:
-- remove empty rhetoric and inflated significance claims
-- reduce translation-like sentence structure
-- avoid repetitive connectors and mechanical list phrasing
-- remove AI-style template phrasing without turning the prose into spoken or conversational Chinese
-- vary sentence rhythm and avoid repeated fixed templates such as "不是……而是……", "不仅……还……", and "首先……其次……再次……" when they appear too often
-- keep contrastive sentence frames only when the contrast carries real argumentative weight; if a direct statement can express the same meaning, prefer the direct statement
-- avoid decorative contrast frames such as "不只是……更重要的是……" and "不再只是……也可以……" when they merely repackage a normal declarative sentence
-- weaken over-connected causal chains such as "通过……从而……进而……"; when the logic is already clear, prefer shorter clauses or direct juxtaposition
-- avoid subject-predicate breaks created by commas in ordinary declarative sentences, such as "X 的基本思想，是……"
-- avoid formulaic diagnostic openers such as "问题在于" when the sentence can begin directly from the actual claim
-- define a technical term once, then use it directly instead of repeatedly wrapping concepts in quotation marks
-- cut paragraph-ending bridge sentences that add no new information, such as stock lines about "providing a foundation" or "offering a basis" unless the sentence carries real content
-- prefer specific verbs over empty safe verbs when possible; reduce overuse of generic verbs such as "进行", "实现", and "提供"
-- preserve technical terms and domain meaning
-- keep the result suitable for direct paste into Word
-- keep the tone academically natural; do not inject colloquial fillers, exaggerated emotion, or chat-style phrasing just to look human
-- if the machine-like feel comes from structure rather than wording, delete or merge redundant material instead of merely rephrasing it
-- when strengthening a judgment, prefer mechanism-grounded academic wording such as "不再成立", "难以维持", or "其实证支撑减弱"; do not use colloquial emphatics like "直接崩了"
-- describe method motivation truthfully; if a design choice is for training feasibility, compute budget, or annotation limits, say so directly instead of drifting into generic "deployment" or "landing" language
-- remove abstract packaged nouns with weak information value, such as generic uses of "链路", "落点", or similar catch-all words, unless they refer to a real technical object like an imaging pipeline or propagation pipeline
-- avoid question-and-answer style contrasts such as "能不能用" / "如何改造后再用" and sloganized paired labels such as "可检测" / "可迁移" when they make the prose sound translated or machine-compressed
-- avoid defensive process clarifications that answer a question the reader has not yet asked; if the core workflow is already clear, state the process once and stop
-- in related-work sections, do not stop at "谁做了什么"; after representative citations, prefer adding a limitation, a condition, or an implication
-- do not force every surveyed subtopic into the same paragraph count or the same "intro-contribution-limit" rhythm; compress background and expand directly relevant methods
-- do not use em dashes (——) anywhere in thesis prose; when removing an em dash, always rewrite the sentence to ensure it reads naturally with the replacement punctuation (colon, comma, "即", "例如", or restructured clause); paired em dashes used as parenthetical insertions must also be rewritten into comma-delimited appositions, parentheses, or restructured sentences
+Rules:
+- Remove empty rhetoric and inflated significance claims
+- Reduce mechanical patterns (repetitive connectors, forced symmetry, template phrasing)
+- Preserve technical terms and domain meaning
+- Never make the prose casual or chatty
+- If machine feel comes from structure, delete or merge redundant material instead of rephrasing
+- Em dashes: remove and rewrite naturally (applies to both languages)
 
-Humanize examples:
-- bad: `在本文的问题设定中，AI生成图像检测、AI生成图像溯源、闭集设定以及后文的方法建模并非彼此孤立的概念。`
-- better: `本文讨论的 AI 生成图像检测、AI 生成图像溯源和闭集设定，本质上都围绕来源判别展开。`
-- bad: `视觉基础模型真正提出的问题不是“能不能用”，而是“如何改造后再用”。`
-- better: `视觉基础模型路线的核心挑战在于：如何在保留迁移能力的前提下，使其适配来源判别任务。`
-- bad: `ViT 处理的不是整幅图像的像素网格，而是固定大小的 patch 序列。`
-- better: `ViT 将输入图像切分为固定大小的 patch 序列进行处理。`
-- bad: `位置编码的作用不只是标记 patch 的位置，更重要的是恢复全局结构的组织关系。`
-- better: `位置编码用于补充 patch 的空间位置信息，也帮助模型恢复全局结构的组织关系。`
-- bad: `这意味着视觉基础模型不再只是通用分类器，也可以成为来源识别的表征底座。`
-- better: `这意味着视觉基础模型已经具备支撑来源识别表征学习的潜力。`
-- bad: `在视觉任务中，LoRA 的应用方式往往不是为了完全替代原始骨干，而是为了用较少参数调节模型关注什么。`
-- better: `在视觉任务中，LoRA 通常承担受控调节器的角色，用较少参数调整模型关注什么。`
-- bad: `原型学习的基本思想，是为每个类别学习一个具有代表性的中心表示。`
-- better: `原型学习的基本思想是为每个类别学习一个具有代表性的中心表示。`
-- bad: `后续用原型学习稳住来源边界的设计就缺乏根据。`
-- better: `后续围绕原型学习重组来源判别几何的设计就缺乏根据。`
-- bad: `空间域、频域以及局部纹理与全局语义的关系，正是把问题收束到……`
-- better: `空间域、频域以及局部纹理与全局语义的关系，共同说明了……`
-- bad: `问题在于，来源识别需要的往往不是这种高层语义一致性。`
-- better: `来源识别更关心生成过程中的来源差异，高层语义一致性本身不足以支撑这一任务。`
-- bad: `对强语义表征模型而言，语义线索往往更显著。`
-- better: `对以视觉基础模型为代表、擅长提取高层语义的表征模型而言，语义线索往往更显著。`
-- bad: `不过，对本文的闭集溯源任务而言，频域线索仍然只是来源信息的一部分。`
-- better: `本文后续方法并不单独围绕频域统计建模。这里讨论频域线索，主要是为了说明来源信息也可能体现在全局统计分布中。`
-- bad: `现有研究已经证明“可检测”与“可迁移”……`
-- better: `现有研究已经表明，相关方法可以完成真伪检测，也具备一定跨来源迁移能力……`
-- bad: `但就现有文献的实际落点而言……`
-- better: `但就现有文献的研究重心而言……`
-- bad: generic `链路`
-- better: replace with `过程`, `环节`, `传播过程`, or delete the word if the verb already implies process
-- belongs to Humanize / De-AI (em dash overuse):
-  - bad: `这些伪影主要来源于GAN架构中普遍使用的上采样操作——转置卷积和最近邻上采样等操作会在频域引入规律性的能量分布异常。`
-  - better: `这些伪影主要来源于GAN架构中普遍使用的上采样操作，例如转置卷积和最近邻上采样，它们会在频域引入规律性的能量分布异常。`
-  - bad: `传统的"训练分类器区分真假"范式存在不对称学习的问题——分类器容易过度拟合训练集中特定生成模型的伪影模式。`
-  - better: `传统的"训练分类器区分真假"范式存在不对称学习的问题：分类器容易过度拟合训练集中特定生成模型的伪影模式。`
-  - bad (paired em dash): `上述四项研究内容——视觉基础模型选择与参数高效适配、输入端语义扰动、优化端原型学习——与统一来源分类框架共同构成了本文方法的完整技术方案。`
-  - better: `上述四项研究内容（视觉基础模型选择与参数高效适配、输入端语义扰动、优化端原型学习）与统一来源分类框架共同构成了本文方法的完整技术方案。`
+Load `references/refinement-modes.md` § Humanize for full pattern list and examples.
 
-### 4. Logic-Check Mode
+Chinese-specific patterns: load `references/chinese-thesis-style.md`
+English-specific patterns: load `references/english-paper-style.md`
+
+## 4. Translation Mode
+
+Use when the user wants to translate between Chinese and English.
+
+Load `references/paper-writing/translation.md` for:
+- 中→英 (Chinese draft → English LaTeX): academic rewrite, proper escaping, tense rules
+- 英→中 (English LaTeX → Chinese text): faithful direct translation for comprehension
+- 中→中 (Chinese draft → formal Chinese): academic rewrite for Word
+- Quality self-check protocols
+
+## 5. Condensing / Expanding Mode
+
+Use when the user wants to adjust text length without changing meaning.
+
+Load `references/paper-writing/condensing-expanding.md` for:
+- Condensing: reduce ~5-15 words by compressing syntax and removing fillers
+- Expanding: add ~5-15 words by explicating implicit logic and enhancing connections
+
+## 6. Logic-Check Mode
 
 Use when the user asks for a logic check, consistency pass, or wants only real problems called out.
 
-Default behavior:
-- use a high threshold
-- report only substantive issues
-- ignore cosmetic style preferences
+Rules:
+- Use a high threshold; default assume the text has been through multiple rounds of editing
+- Report only substantive issues
+- Ignore cosmetic style preferences
 
 Focus on:
-- contradictions
-- undefined terms or symbols
-- claim-evidence mismatch
-- missing transitions that block understanding
-- inconsistent naming of the same concept
-- duplicated claims that appear in multiple sections
-- pseudo-categories whose items are actually causes, effects, or scenario conditions of one another
-- section-introduction or section-ending sentences that only restate the heading without adding content
-- over-connected causal chains that make the logic softer rather than clearer
-- literature review paragraphs that only summarize citations neutrally without extracting any limitation or implication
-- conclusion-like sentences whose basis is missing, unclear, or weaker than the wording suggests
+- Contradictions
+- Undefined terms or symbols
+- Claim-evidence mismatch
+- Missing transitions that block understanding
+- Inconsistent naming of the same concept
+- Duplicated claims across sections
+- Pseudo-categories whose items are actually causes, effects, or conditions of one another
+- Section-intro or section-ending sentences that only restate the heading
+- Over-connected causal chains that weaken rather than strengthen the logic
+- Literature review paragraphs that only summarize without extracting limitations
+- Conclusion sentences whose basis is missing or weaker than the wording
 
-### 5. Review-Pass Mode
+## 7. Review-Pass Mode
 
-Use when the user wants a chapter or thesis section reviewed from an advisor, reviewer, or defense perspective.
+Use when the user wants a chapter reviewed from an advisor, reviewer, or defense perspective.
 
-Default behavior:
-- summarize the section's claimed contribution or purpose
-- separate major issues from minor improvements
-- explain which issues are fixable by revision and which are structural
-- keep the advice practical and chapter-specific
+Rules:
+- Summarize the section's claimed contribution or purpose
+- Separate major issues from minor improvements
+- Explain which issues are fixable by revision and which are structural
+- Keep the advice practical and chapter-specific
+- Every conclusion sentence must have a basis: literature, experiment, or theoretical analysis
 
-Hard review rule:
-- every conclusion-like sentence must have an identifiable basis
-- acceptable bases are:
-  - literature support
-  - experiment support
-  - explicit theoretical analysis
-- in literature-review sections, cited representative work may itself serve as the basis, but the reviewer should still flag overextended conclusions that go beyond the cited evidence
-- if a conclusion sentence has no clear basis, flag it as a real review issue rather than a style preference
+For full review-refine loop: load `references/review/six-pass-review-loop.md`
+For review output format: load `references/review/review-output-template.md`
 
-### 6. Figure-Brief Mode
+## 8. Reviewer Simulation Mode
+
+Use when the user wants the paper reviewed from a conference/journal reviewer perspective.
+
+Rules:
+- Read as a critical but fair reviewer for the target venue
+- Assess: contribution significance, writing clarity, experimental strength, evaluation completeness, method design soundness
+- Output: Summary, Strengths, Weaknesses (with specific evidence), Rating, Strategic advice
+- Distinguish "fatal issues" from "fixable-in-revision issues"
+- Score must reflect actual contribution level; do not default to harsh preset
+
+Load `references/review/five-dimension-review.md` for the 5-dimension checklist.
+
+## 9. Figure-Brief Mode
 
 Use when the user needs help inserting or designing a figure.
 
-Default behavior:
-- give a technical figure brief, not decorative art direction
-- specify insertion point, purpose, elements, suggested caption, and one sentence that introduces the figure in the prose
-- optionally give an English figure title if the user wants one
+Output:
+- Insertion point
+- Figure purpose
+- Key visual elements
+- Suggested caption
+- Prose callout sentence
+- Optional English figure title
 
-Prefer:
-- workflow diagrams
-- architecture diagrams
-- module relationship diagrams
-- experiment setup figures
-- result explanation figures
+For architecture diagram generation: load `references/paper-writing/architecture-diagrams.md`
+For experiment chart recommendations: load `references/paper-writing/experiment-visualization.md`
+For caption formatting: load `references/paper-writing/figure-table-captions.md`
 
-### 7. Formula Mode
+## 10. Experiment Analysis Mode
+
+Use when the user wants experiment results analyzed and written up.
+
+Load `references/paper-writing/experiment-analysis.md` for:
+- Data-driven analysis writing
+- LaTeX `\paragraph{}` structure for experiment sections
+- Truthfulness rules: all conclusions must come from data
+- Output format with analysis paragraphs and Chinese back-translation
+
+## 11. Formula Mode
 
 Use when the user asks for formulas or wants formulas inserted into a section.
 
-Default behavior:
-- output raw LaTeX only
-- do not wrap with `$`, `$$`, `\(` `\)`, or `\[` `\]`
-- keep notation consistent with the surrounding text
-- add a short Chinese explanation when useful
+Output raw LaTeX only. No `$`, `$$`, `\(`, `\)`, `\[`, `\]` delimiters.
+Keep notation consistent with the surrounding text.
+Add a short explanation in the user's language when useful.
 
-## Output Rules
+---
 
-### Section Drafts
+# Verification and Citation Rules
+
+Apply sentence-level checking before finalizing any text (both Chinese and English).
+
+For each sentence:
+- Classify as factual, interpretive, methodological, or connective
+- Re-check factual and literature-backed statements before keeping them
+- Remove or soften claims that cannot be supported
+
+Citation format:
+- Chinese thesis: `（Author, Year, DOI: xxx）` (full-width parentheses)
+- English paper: `\cite{key}` or `(Author et al., Year)` per venue style
+
+Hard rules:
+- Never invent author names, years, or DOI values
+- **When citations are missing or incomplete:** proactively use runSubagent to search for and retrieve complete references (author names, years, DOI, publication venue). Do NOT leave placeholders like `[TO ADD CITATION]`.
+- The agent MUST execute literature search automatically when it encounters:
+  - incomplete citations (missing DOI or publication year)
+  - sentences with strong factual claims but no source nearby
+  - any reference mentioned without full details
+- Use search queries targeting arXiv, Google Scholar, IEEE Xplore, conference proceedings
+- If a DOI is not verified after search, do not output a fake citation
+- If support is missing after thorough search, use `[待补充]` / `[TO VERIFY CITATION]` as last resort
+- If a sentence makes a strong claim but no source is available, rewrite conservatively or flag for verification
+- Conclusion sentences must be backed by: literature, experiment, or explicit theoretical analysis
+- This verification covers ALL sections, not only literature review
+
+Load `references/citation-verification.md` for the full workflow.
+
+---
+
+# Writing Convention Rules
+
+Separate "de-AI" issues from "writing convention" issues. Convention rules are not mere style preferences.
+
+## Shared Conventions (Both Languages)
+
+- First mention of an abbreviation → give full name, then abbreviate consistently
+- Published works → prefer method name or paper title at first mention, not just "Author et al."
+- Keep technical terms, abbreviations, and citation references stable across sections
+- Do not treat convention rules as optional style suggestions
+
+## Chinese-Specific Conventions
+
+- No spaces between CJK and Western letters/numbers: "ViT模型"、"LoRA微调"、"第3章"
+- Use paired full-width quotation marks: ""和''
+- Full-width Chinese punctuation: ，。；：
+- First English term → full English name + Chinese translation, then abbreviation
+- Do not use em dashes (——) in thesis prose; rewrite with colons, commas, or restructured clauses
+
+Load `references/chinese-thesis-style.md` for the complete style guide.
+
+## English-Specific Conventions
+
+- No contractions in academic prose (use "does not", not "doesn't")
+- Avoid possessive forms for method/model names (use "the performance of X", not "X's performance")
+- Present tense for methods and findings; past tense only for specific historical events
+- Avoid AI-overused vocabulary: leverage, delve, tapestry, etc.
+- No `\textbf{}` or `\emph{}` for emphasis in body text; use sentence structure
+- Do not expand common domain abbreviations (keep LLM, not Large Language Models)
+- Preserve existing LaTeX commands (`\cite{}`, `\ref{}`, `\eg`, `\ie`)
+
+Load `references/english-paper-style.md` for the complete style guide.
+
+---
+
+# Output Rules
+
+## Section Drafts
 
 When drafting a section:
-- write the section body in Chinese
-- **CRITICAL: Do NOT insert empty blank lines between paragraphs.** Output contiguous text blocks to match standard Word indent formatting directly. Paragraphs should be separated only by natural paragraph breaks (when pasted into Word, indent formatting will handle spacing automatically). This rule applies to all output, including when saving to `.txt` files.
-- avoid Markdown unless the user explicitly asks for it
-- avoid bullet lists inside the final prose unless the genre truly requires them
-- **CRITICAL: When any sentence needs a citation, AUTOMATICALLY search for and retrieve the complete reference (full author names, year, DOI, publication venue) before finalizing the text.** Do not use `[TO ADD CITATION]` or other placeholders for missing references. Use runSubagent to search academic databases if internal knowledge is incomplete.
-- when a sentence depends on published work, attach the citation in `（Author, Year, DOI: xxx）` format
-- run one final pass to check whether each factual sentence is either supported, softened, or marked for verification
+- Chinese: contiguous paragraphs, **no empty blank lines between paragraphs**, no Markdown formatting, suitable for direct paste into Word
+- English: LaTeX-ready content with proper escaping (`%`, `_`, `&`)
+- **When any sentence needs a citation, AUTOMATICALLY search and retrieve the complete reference before finalizing.** Use runSubagent if internal knowledge is incomplete.
+- Run one final pass to check whether each factual sentence is supported, softened, or marked for verification
 
-### Refinement Passes
+## Refinement Passes
 
 When refining existing text:
-- return the revised full text unless the user asks for diff-style edits
-- keep commentary short
-- mention only the most important changes
+- Return the revised full text unless the user asks for diff-style edits
+- Keep commentary short; mention only the most important changes
 
-### Figure Guidance
+## Figure Guidance
 
 For each figure, provide:
-- insertion point
-- figure purpose
-- key visual elements
-- suggested caption
-- prose callout sentence
+- Insertion point, figure purpose, key visual elements, suggested caption, prose callout sentence
+- If the figure does not exist yet, provide a creation brief
 
-If the figure does not exist yet, provide a concise creation brief rather than pretending the figure already exists.
+## Formulas
 
-### Formulas
+Correct: `L = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2`
+Incorrect: `$L = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2$`
 
-Correct:
+---
 
-```text
-L = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2
-```
+# Review-Refinement Loop (审核-精修循环)
 
-Incorrect:
+Use when the user asks for "审核-精修循环", "审稿-精修", "review-refine loop", or "审核直到通过".
 
-```text
-$L = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2$
-```
+This is a composite workflow that runs 6 review passes, collects all issues, applies fixes, then re-reviews until no major issues remain. Works for both Chinese thesis and English papers.
 
-## Review-Refinement Loop (审核-精修循环)
+Load `references/review/six-pass-review-loop.md` for the full 6-pass protocol.
 
-Use when the user asks for "审核-精修循环", "审稿-精修", or "review-refine loop". This is a composite workflow that runs multiple review passes, collects all issues, applies fixes in one batch, then re-reviews until no major issues remain.
+### Pass Summary
 
-### Trigger
-
-Activate this loop when:
-- the user explicitly requests a review-refine cycle
-- the user says "审核直到通过" or similar
-
-### Passes (run in order)
-
-Each pass reads the CURRENT version of text (not the original draft). Collect all findings into a single issue list before making any edits.
-
-#### Pass 1: Reader Test (读者测试)
-
-Simulate a first-time reader of the chapter. Check:
-- can the argument be followed without re-reading?
-- are there undefined terms used before introduction?
-- are cross-references (e.g., "如 1.4.3 节所述") pointing to real content?
-- is the reading flow blocked by abrupt transitions or missing context?
-- are there redundant paragraphs or duplicated claims across sections?
-
-#### Pass 2: De-AI / Humanize Check (去 AI 味)
-
-Scan for patterns listed in Humanize Mode (Mode 3) and `references/refinement-modes.md`. Focus on:
-- mechanical parallel structures ("首先……其次……再次……", "不是……而是……" repeated)
-- decorative contrast frames that repackage direct statements
-- over-connected causal chains ("通过……从而……进而……")
-- subject-predicate comma breaks ("X 的基本思想，是……")
-- generic verbs ("进行", "实现", "提供") used as fillers
-- abstract catch-all nouns ("链路", "落点") without concrete referent
-- paragraph-ending bridge sentences that add no information
-- section-introduction filler that merely restates the heading
-- pseudo-taxonomies where items are actually cause-effect or condition-amplification
-
-#### Pass 3: Writing Convention Check (学术规范)
-
-Check rules that are part of thesis 写作规范, not mere style:
-- first mention of an English term must give full English name + Chinese translation, then shorten consistently
-- first mention of a published work should prefer its established method name or paper title, not bare "Author et al."
-- abbreviation and term consistency across nearby sections
-- citation format consistency: `（Author, Year, DOI: xxx）`
-
-#### Pass 4: Citation and Fact Verification (引用与事实核查)
-
-Apply rules from `references/citation-verification.md`:
-- **scan every sentence and classify it as factual, conclusion-like, interpretive, or connective; every factual or conclusion-like sentence must be explicitly checked for citation support — this applies to ALL sections of the thesis, not only literature-review chapters**
-- every factual claim has a citation or is softened
-- no invented author names, years, or DOIs
-- every conclusion-like sentence has an identifiable basis (literature, experiment, or theoretical analysis)
-- strong comparative/evaluative claims ("widely recognized", "state of the art") have evidence or are weakened
-- if a factual or conclusion-like sentence lacks a citation and the claim is non-trivial, use runSubagent to search for supporting literature before deciding whether to add a citation or soften the claim
-- if incomplete citations are found, use runSubagent to search and fill them before flagging
-- **mandatory re-verification after any citation is added or corrected:** immediately re-check that the author names, year, DOI string, and publication venue retrieved by runSubagent are internally consistent and the DOI resolves to the correct paper; do not treat a retrieved citation as verified unless this check passes explicitly
-
-#### Pass 5: Logic Check (逻辑检查)
-
-Apply high-threshold rules from Logic-Check Mode (Mode 4):
-- contradictions between sections
-- claim-evidence mismatch
-- undefined terms or symbols
-- inconsistent naming of the same concept
-- conclusion sentences whose basis is missing or weaker than the wording
-
-#### Pass 6: Reviewer Pass (审稿人视角)
-
-Simulate a thesis defense reviewer. Apply rules from Review-Pass Mode (Mode 5):
-- summarize the section's claimed contribution
-- separate major issues from minor improvements
-- flag unsupported conclusions as real issues, not style preferences
-- check whether each contribution claim in 1.6 (创新点) is backed by method content in 1.5 and literature analysis in 1.3-1.4
-
-### After All Passes: Issue Consolidation
-
-- merge duplicates (same issue found in multiple passes)
-- classify each issue as: **major** (must fix), **minor** (should fix), or **cosmetic** (optional)
-- discard cosmetic issues unless the count is very low and they are easy to fix
-
-### Fix Phase
-
-- apply all major and minor fixes using `multi_replace_string_in_file` on the individual section `.txt` files
-- re-concatenate the master draft via terminal command after fixes
-- do NOT fix cosmetic-only issues unless explicitly asked
-
-### Re-Review Phase
-
-- re-read the fixed text
-- **if any citations were added or modified during the Fix Phase, re-run Pass 4 in full (not compressed) before the general re-check:** confirm that each new or changed citation has correct author names, year, DOI, and that the DOI matches the paper being cited; any citation that fails this check must be flagged as a major issue
-- run a compressed re-check (all 6 passes in one scan) on all other changes
-- if new major issues are found, fix and re-check again
-- if only minor or cosmetic issues remain, report them to the user and declare the loop passed
+1. **Reader Test**: reading flow, undefined terms, cross-references, redundancy
+2. **De-AI / Humanize**: mechanical patterns, template phrasing (load `references/refinement-modes.md`)
+3. **Writing Convention**: terminology, abbreviation, citation format consistency
+4. **Citation & Fact Verification**: sentence classification, citation support (load `references/citation-verification.md`)
+5. **Logic Check**: contradictions, claim-evidence mismatch, naming consistency
+6. **Reviewer Pass**: contribution claims, evidence backing, structural issues
 
 ### Output Shape
 
 ```text
-[审核结果 - 第 N 轮]
+[审核结果 - 第 N 轮] / [Review Result - Round N]
 
-重大问题：
-1. ...
-2. ...
-
-次要问题：
+重大问题 / Major Issues:
 1. ...
 
-已修复：
-- ...
+次要问题 / Minor Issues:
+1. ...
+
+已修复 / Fixed:
 - ...
 
 结论：审核通过 / 需要再修一轮
+Conclusion: Passed / Needs another round
 ```
 
-## File-Oriented Workflow
+---
 
-If the user wants files created, write the final content to `.txt` files directly without empty lines between paragraphs.
+# File-Oriented Workflow
+
+If the user wants files created, write the final content to `.txt` files directly.
 
 Suggested structure when none is provided:
 - `thesis/chapters/ch01-introduction.txt`
@@ -532,72 +379,19 @@ Suggested structure when none is provided:
 - `thesis/chapters/ch04-experiments.txt`
 - `thesis/figures/figure-notes.txt`
 
-If the user wants finer granularity, split by section first (e.g., `1.1.txt`, `1.2.txt`), and finally synthesize/combine them into a single master draft file (e.g., `第一章_总稿.txt`) at the end.
+For finer granularity, split by section (e.g., `1.1.txt`, `1.2.txt`), then concatenate into a master draft (e.g., `第一章_总稿.txt`).
 
 ### Concatenation Rule
 
-When combining multiple section files into a master draft, use terminal commands (e.g., `Get-Content` in PowerShell or `cat` in bash) to concatenate the files instead of reading each file into the chat context and writing a new file via `create_file`. This avoids wasting context window on large verbatim copies and is faster and less error-prone. After concatenation, use `read_file` and `replace_string_in_file` to make any needed edits on the resulting file.
-
-## Response Shapes
-
-### Draft a Section
-
-Use:
-- main text
-- optional figure brief
-- optional formulas
-
-### Refine a Section
-
-Use:
-- revised text
-- short revision notes only if useful
-
-### Logic Check
-
-Use:
-- "No substantive issues found" if the section is already solid
-- otherwise a short list of real issues only
-
-### Review Pass
-
-Use:
-- summary
-- strengths
-- major issues
-- revision advice
-
-## What to Borrow From Other Writing Workflows
-
-This skill intentionally combines several reusable prompt patterns:
-- conservative Chinese thesis polishing
-- de-AI or humanization for Word-ready Chinese prose
-- high-threshold logic review
-- reviewer-style strategic feedback
-- figure brief and title generation
-
-Keep these as internal modes, not separate bloated outputs.
-
-## References
-
-Read [references/output-format.md](references/output-format.md) for exact output shapes.
-
-Read [references/chinese-thesis-style.md](references/chinese-thesis-style.md) for tone, paragraphing, and anti-slop guidance.
-
-Read [references/refinement-modes.md](references/refinement-modes.md) when the user explicitly asks for humanization, conservative polishing, logic checking, figure titles, or a reviewer-style pass.
-
-Read [references/citation-verification.md](references/citation-verification.md) when the user wants literature-backed writing, inline citations, or sentence-level fact checking.
+Use terminal commands (`Get-Content` in PowerShell or `cat` in bash) to concatenate files instead of reading each into context. After concatenation, use `read_file` and `replace_string_in_file` for edits.
 
 ---
 
-# English Paper Writing (ML/CV/NLP)
+# Section Writing Guides
 
-When the user selects **English paper mode**, load the references below.
-These are adapted from the [Pengsida methodology](https://pengsida.notion.site/c1a22465a0fa4b15a12985223916048e).
-
-## Section Writing Guides
-
-Read these references for section-specific guidance:
+These references provide section-specific guidance. They apply to both Chinese and English papers.
+The section structure, logic flow, and argumentation principles are language-agnostic;
+apply the language-specific style conventions from `references/chinese-thesis-style.md` or `references/english-paper-style.md` to the final prose.
 
 - [references/paper-writing/abstract.md](references/paper-writing/abstract.md) — Abstract: 3 templates (Challenge→Contribution/Insight)
 - [references/paper-writing/introduction.md](references/paper-writing/introduction.md) — Introduction: backward reasoning + 4+3+4 template system
@@ -617,10 +411,10 @@ Load specific examples on demand:
 - `references/paper-writing/examples/introduction/` — 13 introduction examples (task intro + challenge + pipeline)
 - `references/paper-writing/examples/method/` — 9 method examples (three-element structure, module design)
 
-## Core English Writing Principles
+## Core Principles (Both Languages)
 
 - One paragraph, one message.
-- Reverse-outline verification: after writing, extract each paragraph's topic sentence; the sequence should form a coherent argument.
+- Reverse-outline verification: extract each paragraph's topic sentence; the sequence should form a coherent argument.
 - Module description follows the triad: **Motivation → Design → Technical Advantage**.
 - Tables use booktabs style (no vertical lines, minimal horizontal lines).
 - Every major claim must be supported by experimental evidence (see claim-evidence alignment).
@@ -722,21 +516,25 @@ load and follow the references in `references/claim-evidence/`:
 
 ---
 
-# English Paper Review (5-Dimension)
+# Review (5-Dimension + 6-Pass Loop)
 
-When the user selects English mode for review, load `references/review/`:
+When the user selects review mode, load `references/review/`:
 
 - [references/review/five-dimension-review.md](references/review/five-dimension-review.md) — 5-dimension adversarial review checklist
-- [references/review/six-pass-review-loop.md](references/review/six-pass-review-loop.md) — 6-pass review-refine loop (also used for Chinese thesis)
-- [references/review/review-output-template.md](references/review/review-output-template.md) — Review output format templates
+- [references/review/six-pass-review-loop.md](references/review/six-pass-review-loop.md) — 6-pass review-refine loop (works for both Chinese thesis and English paper)
+- [references/review/review-output-template.md](references/review/review-output-template.md) — Review output format templates (both languages)
 
-### English 5-Dimension Review
+### 5-Dimension Review (for conference/journal papers)
 
 1. **Contribution**: New knowledge? Non-obvious novelty?
 2. **Writing Clarity**: Reproducible? Consistent terms? One paragraph, one message?
 3. **Experimental Strength**: Meaningful improvements over strong baselines?
 4. **Evaluation Completeness**: All key ablations? Strong baselines included?
 5. **Method Design Soundness**: Realistic setting? Robust without per-case tuning?
+
+### 6-Pass Review Loop (for both Chinese thesis and English paper)
+
+See [Review-Refinement Loop](#review-refinement-loop-审核-精修循环) above.
 
 ---
 
@@ -746,3 +544,8 @@ These cross-cutting references can be loaded by any module when needed:
 
 - [references/cross-section-consistency.md](references/cross-section-consistency.md) — Cross-section terminology, notation, abbreviation, and cross-reference consistency checks
 - [references/latex-engineering.md](references/latex-engineering.md) — LaTeX table/figure/formula formatting conventions and recommended packages
+- [references/output-format.md](references/output-format.md) — Exact output shapes for all modes
+- [references/refinement-modes.md](references/refinement-modes.md) — Conservative polish, humanize/de-AI, logic check, and review pass detailed rules
+- [references/chinese-thesis-style.md](references/chinese-thesis-style.md) — Chinese thesis tone, paragraphing, and anti-slop guidance
+- [references/english-paper-style.md](references/english-paper-style.md) — English paper tone, word choice, de-AI patterns, and LaTeX conventions
+- [references/citation-verification.md](references/citation-verification.md) — Citation workflow and sentence-level fact checking

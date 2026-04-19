@@ -71,3 +71,16 @@ A good landscape analysis should:
 - Include the most-cited works AND the most recent works
 - Identify at least one emerging/underexplored direction
 - Note conflicting findings or open debates in the field
+
+## Web Search for Papers
+
+If exa or firecrawl MCPs are available, use the `deep-research` or `exa-search` skills to
+execute the actual paper search. Use `category: "research paper"` when available.
+
+Example query pattern:
+```
+web_search_exa(query: "[topic] survey arXiv 2024 2025", numResults: 10, category: "research paper")
+```
+
+This skill (`research-and-writing`) handles the analysis, structuring, and writing after
+the papers are collected. The search execution is handled by `deep-research` / `exa-search`.
